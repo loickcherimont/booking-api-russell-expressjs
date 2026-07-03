@@ -1,9 +1,10 @@
 import express from "express";
 import service from "../services/users.js";
 
-const router = express.Router();
+const loginRoute = express.Router();
+const logoutRoute = express.Router();
 
-router.post("/", service.authenticate);
-router.get("/", service.logout);
+loginRoute.post("/", service.authenticate);
+logoutRoute.get("/", service.logout);
 
-export default router;
+export { loginRoute, logoutRoute };
