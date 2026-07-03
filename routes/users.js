@@ -1,17 +1,18 @@
 import express from "express";
 import service from "../services/users.js";
+import checkJWT from "../middleware/private.js";
 
 const router = express.Router();
 
-router.post("/", service.addUser);
+router.post("/", checkJWT, service.addUser);
 
-router.get("/", service.getAllUsers);
+router.get("/", checkJWT, service.getAllUsers);
 
-router.get("/:email", service.getByUserEmail);
+router.get("/:email", checkJWT, service.getByUserEmail);
 
-router.put("/:email", service.updateUserByEmail);
+router.put("/:email", checkJWT, service.updateUserByEmail);
 
-router.delete("/:email", service.deleteUserByEmail);
+router.delete("/:email", checkJWT, service.deleteUserByEmail);
 
 
 export default router;

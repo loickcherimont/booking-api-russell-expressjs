@@ -1,17 +1,18 @@
 import express from "express";
 import service from "../services/catways.js";
+import checkJWT from "../middleware/private.js";
 
 const router = express.Router();
 
-router.post("/", service.addCatway);
+router.post("/", checkJWT, service.addCatway);
 
-router.get("/", service.getAllCatways);
+router.get("/", checkJWT, service.getAllCatways);
 
-router.get("/:catwayNumber", service.getCatwayByCatwayNumber);
+router.get("/:catwayNumber", checkJWT, service.getCatwayByCatwayNumber);
 
-router.put("/:catwayNumber", service.updateCatwayStateByCatwayNumber);
+router.put("/:catwayNumber", checkJWT, service.updateCatwayStateByCatwayNumber);
 
-router.delete("/:catwayNumber", service.deleteCatwayByCatwayNumber);
+router.delete("/:catwayNumber", checkJWT, service.deleteCatwayByCatwayNumber);
 
 
 export default router;
