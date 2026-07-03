@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des catways</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body class="container mt-5">
+
+  <header>
+    <h1 class="mb-3">Bienvenue sur le gestionnaire de catways</h1>
+    <p class="lead mb-4">Application interne de gestion des catways, réservations et utilisateurs du Port de plaisance
+      Russell.</p>
+  </header>
+
+  <main>
+    <h2 class="mb-3">Connexion</h2>
+    <form action="/login" method="POST" class="w-50" style="min-width: 280px;">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email :</label>
+        <input type="email" id="email" name="email" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe :</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+  </main>
+
+  <footer>
+    <p><a href="#">Lien vers la documentation de l'API</a></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
