@@ -158,4 +158,14 @@ async function authenticate(req, res, next) {
     }
 }
 
+/**
+ * 
+ * TODO: Implement in front token remove
+ * 
+ * @returns HTTP response 200 OK with a simple disconnected message
+ */
+async function logout(req, res) {
+    return res.status(200).json({ message: "Déconnecté avec succès "});
+}
+
 export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail, authenticate };

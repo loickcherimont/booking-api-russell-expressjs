@@ -10,5 +10,6 @@ router.use("/users", userRoute);
 router.use("/catways", catwayRoute);
 router.use("/catways/:catwayNumber/reservations", reservationRoute);
 router.use("/login", loginRoute);
+router.use("/logout", logoutRoute);
 
 export default router;
