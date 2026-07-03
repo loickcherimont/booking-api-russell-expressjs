@@ -1,5 +1,10 @@
 import User from "../models/user.js";
+import bcrypt from "bcrypt";
+import { response } from "express";
+import jwt from "jsonwebtoken";
 
+
+// CRUD
 async function addUser(req, res, next) {
     const temp = {
         email: req.body.email.trim().toLowerCase(),
@@ -17,7 +22,7 @@ async function addUser(req, res, next) {
         if (user) return res.status(201).json(user);
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ message : error.message });
+        return res.status(400).json({ message: error.message });
     }
 }
 
@@ -26,7 +31,7 @@ async function getAllUsers(req, res, next) {
         const users = await User.find();
         return res.status(200).json(users);
     } catch (error) {
-        return res.status(500).json({ message : error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -38,9 +43,9 @@ async function getByUserEmail(req, res, next) {
 
         if (user) return res.status(200).json(user);
 
-        return res.status(404).json({ message : "Utilisateur non trouvé" });
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
     } catch (error) {
-        return res.status(500).json({ message : error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -68,10 +73,10 @@ async function updateUserByEmail(req, res, next) {
             return res.status(200).json(user);
         }
 
-        return res.status(404).json({ message : "Utilisateur non trouvé. Veuillez choisir un utilisateur existant pour la modification"});
+        return res.status(404).json({ message: "Utilisateur non trouvé. Veuillez choisir un utilisateur existant pour la modification" });
 
     } catch (error) {
-        return res.status(500).json({ message : error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -82,13 +87,14 @@ async function deleteUserByEmail(req, res, next) {
 
         await User.deleteOne({ email });
 
-        return res.status(404).json({ message: "Utilisateur supprimé"});
+        return res.status(404).json({ message: "Utilisateur supprimé" });
 
     } catch (error) {
-        return res.status(500).json({ message : error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
+// UTILS
 async function validateEmailIsUnique(email) {
     const existingUser = await User.findOne({ email });
 
@@ -116,4 +122,40 @@ async function validatePassword(password) {
     }
 }
 
-export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail };
+async function authenticate(req, res, next) {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Identifiants incorrects" });
+        }
+
+        const userObject = user.toObject();
+        delete userObject.password;
+
+        const token = jwt.sign({
+            user: userObject
+        }, process.env.SECRET_KEY, { expiresIn: "24h" });
+
+        return res.status(200).json({
+            message: "Authentifié avec succès",
+            token
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur serveur",
+            error: error.message
+        });
+    }
+}
+
+export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail, authenticate };
