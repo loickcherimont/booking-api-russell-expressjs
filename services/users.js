@@ -168,4 +168,4 @@ async function logout(req, res) {
     return res.status(200).json({ message: "Déconnecté avec succès "});
 }
 
-export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail, authenticate };
+export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail, authenticate, logout };
