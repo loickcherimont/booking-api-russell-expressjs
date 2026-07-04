@@ -128,13 +128,13 @@ async function authenticate(req, res, next) {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ message: "Utilisateur non trouvé" });
+            return res.render("home", { message: "Utilisateur non trouvé" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ message: "Identifiants incorrects" });
+            return res.render("home", { message: "Identifiants incorrects" });
         }
 
         const userObject = user.toObject();
@@ -144,27 +144,17 @@ async function authenticate(req, res, next) {
             user: userObject
         }, process.env.SECRET_KEY, { expiresIn: "24h" });
 
-        return res.status(200).json({
-            message: "Authentifié avec succès",
-            token
-        });
+        res.cookie("token", token, { httpOnly: true, secure: false });
+        res.redirect("/dashboard");
 
     } catch (error) {
-        return res.status(500).json({
-            message: "Erreur serveur",
-            error: error.message
-        });
+        res.render("home", { message: "Erreur serveur" });
     }
 }
 
-/**
- * 
- * TODO: Implement in front token remove
- * 
- * @returns HTTP response 200 OK with a simple disconnected message
- */
 async function logout(req, res) {
-    return res.status(200).json({ message: "Déconnecté avec succès "});
+    res.clearCookie("token", { httpOnly: true, secure: false });
+    res.redirect("/");
 }
 
 export default { addUser, getAllUsers, getByUserEmail, updateUserByEmail, deleteUserByEmail, authenticate, logout };
