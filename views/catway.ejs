@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catway <%= catway.catwayNumber %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+      <h1><a class="navbar-brand" href="/dashboard">API Catways</a></h1>
+      <div class="d-flex align-items-center gap-2">
+        <a href="/api-docs" class="btn btn-outline-info btn-sm">Documentation API</a>
+        <a href="/logout" class="btn btn-outline-light">Se déconnecter</a>
+      </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <a href="/catways" class="btn btn-outline-secondary mb-3">&larr; Retour aux catways</a>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Catway n°<%= catway.catwayNumber %></h2>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9"><%= catway.catwayNumber %></dd>
+
+                    <dt class="col-sm-3">Type</dt>
+                    <dd class="col-sm-9"><%= catway.catwayType %></dd>
+
+                    <dt class="col-sm-3">État</dt>
+                    <dd class="col-sm-9"><%= catway.catwayState || "Non renseigné" %></dd>
+                </dl>
+
+                <hr>
+                <h5>Modifier l'état</h5>
+                <form action="/catways/<%= catway.catwayNumber %>/update" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="catwayState" value="<%= catway.catwayState %>" placeholder="Nouvel état">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-warning">Modifier</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer d-flex gap-2">
+                <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-info">Voir les réservations</a>
+                <button class="btn btn-danger" onclick="deleteCatway()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        async function deleteCatway() {
+            if (confirm("Confirmer la suppression du catway n°<%= catway.catwayNumber %> ?")) {
+                await fetch("/catways/<%= catway.catwayNumber %>", { method: "DELETE" });
+                window.location.href = "/catways";
+            }
+        }
+    </script>
+</body>
+
+</html>

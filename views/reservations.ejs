@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des réservations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+      <h1><a class="navbar-brand" href="/dashboard">API Catways</a></h1>
+      <div class="d-flex align-items-center gap-2">
+        <a href="/api-docs" class="btn btn-outline-info btn-sm">Documentation API</a>
+        <a href="/logout" class="btn btn-outline-light">Se déconnecter</a>
+      </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <a href="/catways" class="btn btn-outline-secondary mb-3">&larr; Retour aux catways</a>
+        <h2>Réservations</h2>
+
+        <div class="card mt-4">
+            <div class="card-header">Ajouter une réservation</div>
+            <div class="card-body">
+                <form action="/catways/<%= catwayNumber %>/reservations" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="clientName" class="form-label">Client</label>
+                            <input type="text" class="form-control" id="clientName" name="clientName" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="boatName" class="form-label">Bateau</label>
+                            <input type="text" class="form-control" id="boatName" name="boatName" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="startDate" class="form-label">Début</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="endDate" class="form-label">Fin</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" required>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Ajouter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Catway</th>
+                    <th>Client</th>
+                    <th>Bateau</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% reservations.forEach(reservation=> { %>
+                    <tr>
+                        <td><%= reservation.catwayNumber %></td>
+                        <td><%= reservation.clientName %></td>
+                        <td><%= reservation.boatName %></td>
+                        <td><%= reservation.startDate.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) %></td>
+                        <td><%= reservation.endDate.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) %></td>
+                        <td>
+                            <a href="/catways/<%= reservation.catwayNumber %>/reservations/<%= reservation._id %>" class="btn btn-sm btn-info">Consulter</a>
+                            <button class="btn btn-sm btn-danger" onclick="deleteReservation('<%= reservation._id %>', <%= reservation.catwayNumber %>)">Supprimer</button>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script>
+        async function deleteReservation(id, catwayNumber) {
+            if (confirm("Confirmer la suppression de cette réservation ?")) {
+                await fetch("/catways/" + catwayNumber + "/reservations/" + id, { method: "DELETE" });
+                location.reload();
+            }
+        }
+    </script>
+</body>
+
+</html>

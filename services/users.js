@@ -1,6 +1,5 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
-import { response } from "express";
 import jwt from "jsonwebtoken";
 
 
@@ -19,19 +18,19 @@ async function addUser(req, res, next) {
 
         const user = await User.create(temp);
 
-        if (user) return res.status(201).json(user);
+        if (user) return res.redirect("/users");
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ message: error.message });
+        res.render("users", { users: [], message: error.message });
     }
 }
 
 async function getAllUsers(req, res, next) {
     try {
         const users = await User.find();
-        return res.status(200).json(users);
+        res.render("users", { users, message: null });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("users", { users: [], message: error.message });
     }
 }
 
@@ -41,11 +40,11 @@ async function getByUserEmail(req, res, next) {
     try {
         const user = await User.findOne({ email });
 
-        if (user) return res.status(200).json(user);
+        if (user) return res.render("user", { user, message: null });
 
-        return res.status(404).json({ message: "Utilisateur non trouvé" });
+        res.render("users", { users: [], message: "Utilisateur non trouvé" });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("users", { users: [], message: error.message });
     }
 }
 
@@ -70,13 +69,13 @@ async function updateUserByEmail(req, res, next) {
             });
 
             await user.save();
-            return res.status(200).json(user);
+            return res.redirect("/users");
         }
 
-        return res.status(404).json({ message: "Utilisateur non trouvé. Veuillez choisir un utilisateur existant pour la modification" });
+        res.render("users", { users: [], message: "Utilisateur non trouvé. Veuillez choisir un utilisateur existant pour la modification" });
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("users", { users: [], message: error.message });
     }
 }
 
@@ -87,10 +86,10 @@ async function deleteUserByEmail(req, res, next) {
 
         await User.deleteOne({ email });
 
-        return res.status(404).json({ message: "Utilisateur supprimé" });
+        res.redirect("/users");
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("users", { users: [], message: error.message });
     }
 }
 

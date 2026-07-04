@@ -10,10 +10,13 @@ import usersRouter from "./routes/users.js";
 
 import { initClientDbConnection } from "./db/mongo.js";
 import { fileURLToPath } from "url";
+import { setupSwagger } from "./config/swagger.js";
 
 initClientDbConnection();
 
 const app = express();
+
+setupSwagger(app);
 
 // view engine setup
 app.set("views", path.join(path.dirname(fileURLToPath(import.meta.url)), "views"));
