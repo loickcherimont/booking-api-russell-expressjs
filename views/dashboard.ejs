@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <h1><a class="navbar-brand" href="/dashboard">API Catways</a></h1>
+      <div class="d-flex align-items-center gap-2">
+        <a href="/api-docs" class="btn btn-outline-info btn-sm">Documentation API</a>
+        <a href="/logout" class="btn btn-outline-light">Se déconnecter</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="mb-4">
+      <h2>Bienvenue <%= currentUser.username %>
+      </h2>
+      <p class="text-muted">
+        <%= currentUser.email %>
+      </p>
+      <p class="text-muted">
+        <%= new Date().toLocaleDateString("fr-FR", { weekday: "long" , year: "numeric" , month: "long" , day: "numeric"
+          }) %>
+      </p>
+    </div>
+
+    <div class="list-group mt-4">
+      <% pages.forEach( page=> { %>
+        <a href="<%= page.link %>" class="list-group-item list-group-item-action">
+          Gestionnaire <%= page.name %>
+        </a>
+        <% }) %>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

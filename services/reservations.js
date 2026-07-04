@@ -12,10 +12,10 @@ async function addReservation(req, res, next) {
     try {
         const reservation = await Reservation.create(temp);
 
-        if (reservation) return res.status(201).json(reservation);
+        if (reservation) return res.redirect("/catways/" + req.params.catwayNumber + "/reservations");
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ message: error.message });
+        res.render("reservations", { catwayNumber: req.params.catwayNumber, reservations: [], message: error.message });
     }
 }
 
@@ -25,9 +25,9 @@ async function getAllReservations(req, res, next) {
     try {
         const reservations = await Reservation.find({ catwayNumber });
 
-        return res.status(200).json(reservations);
+        res.render("reservations", { catwayNumber, reservations, message: null });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("reservations", { catwayNumber, reservations: [], message: error.message });
     }
 }
 
@@ -38,11 +38,11 @@ async function getReservationById(req, res, next) {
     try {
         const reservation = await Reservation.findOne({ _id: id, catwayNumber });
 
-        if (reservation) return res.status(200).json(reservation);
+        if (reservation) return res.render("reservation", { reservation, message: null });
 
         return res.status(404).json({ message: "Réservation non trouvée" });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("reservations", { catwayNumber, reservations: [], message: error.message });
     }
 }
 
@@ -67,12 +67,12 @@ async function updateReservationById(req, res, next) {
             });
 
             await reservation.save();
-            return res.status(200).json(reservation);
+            return res.redirect("/catways/" + catwayNumber + "/reservations");
         }
 
-        return res.status(404).json({ message: "Réservation non trouvée. Veuillez choisir une réservation existante pour la modification" });
+        res.render("reservations", { catwayNumber, reservations: [], message: "Réservation non trouvée. Veuillez choisir une réservation existante pour la modification" });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("reservations", { catwayNumber, reservations: [], message: error.message });
     }
 }
 
@@ -82,9 +82,9 @@ async function deleteReservationById(req, res, next) {
     try {
         await Reservation.deleteOne({ _id: id, catwayNumber });
 
-        return res.status(200).json({ message: "Réservation supprimée" });
+        res.redirect("/catways/" + catwayNumber + "/reservations");
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("reservations", { catwayNumber, reservations: [], message: error.message });
     }
 }
 

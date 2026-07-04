@@ -11,19 +11,22 @@ async function addCatway(req, res, next) {
     try {
         const catway = await Catway.create(temp);
 
-        if (catway) return res.status(201).json(catway);
+        // if (catway) return res.status(201).json(catway);
+        if (catway) return res.redirect("/catways");
+
+
     } catch (error) {
         console.error(error);
-        return res.status(400).json({ message: error.message });
+        res.render("catways", { catways: [], message: error.message });
     }
 }
 
 async function getAllCatways(req, res, next) {
     try {
         const catways = await Catway.find();
-        return res.status(200).json(catways);
+        res.render("catways", { catways, message: null });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("catways", { catways: [], message: error.message });
     }
 }
 
@@ -33,11 +36,11 @@ async function getCatwayByCatwayNumber(req, res, next) {
     try {
         const catway = await Catway.findOne({ catwayNumber });
 
-        if (catway) return res.status(200).json(catway);
+        if (catway) return res.render("catway", { catway, message: null });
 
-        return res.status(404).json({ message: "Catway non trouvé" });
+        res.render("catways", { catways: [], message: "Catway non trouvé" });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("catways", { catways: [], message: error.message });
     }
 }
 
@@ -57,13 +60,13 @@ async function updateCatwayStateByCatwayNumber(req, res, next) {
             }
 
             await catway.save();
-            return res.status(200).json(catway);
+            return res.redirect("/catways");
         }
 
-        return res.status(404).json({ message : "Catway non trouvé. Veuillez choisir un catway existant pour la modification"});
+        res.render("catways", { catways: [], message: "Catway non trouvé. Veuillez choisir un catway existant pour la modification" });
 
     } catch (error) {
-        return res.status(500).json({ message : error.message });
+        res.render("catways", { catways: [], message: error.message });
     }
 }
 
@@ -73,10 +76,10 @@ async function deleteCatwayByCatwayNumber(req, res, next) {
     try {
         await Catway.deleteOne({ catwayNumber });
 
-        return res.status(200).json({ message: "Catway supprimé" });
+        res.redirect("/catways");
 
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        res.render("catways", { catways: [], message: error.message });
     }
 }
 
